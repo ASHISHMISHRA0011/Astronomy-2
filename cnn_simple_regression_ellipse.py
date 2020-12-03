@@ -7,7 +7,7 @@ Created on Sun Nov 15 22:13:42 2020
 """
 
 # USAGE
-# python cnn_regression.py --dataset Houses-dataset/Houses\ Dataset/
+# python cnn_regression.py 
 
 # import the necessary packages
 from sklearn.model_selection import train_test_split
@@ -20,12 +20,8 @@ import argparse
 import locale
 import os
 
-# construct the argument parser and parse the arguments
-# ap = argparse.ArgumentParser()
-# ap.add_argument("-d", "--dataset", type=str, required=True,
-# 	help="path to input dataset of house images")
-# args = vars(ap.parse_args())
-    
+
+# mention the parent directory    
 loc="/home/ashish/MACHINE LEARNING/ash"
 # construct the path to the input .txt file that contains information
 # and then load the dataset
@@ -41,14 +37,14 @@ print("[INFO] constructing training/testing split...")
 
 
 
-# find the largest house price in the training set and use it to
-# scale our house prices to the range [0, 1] (this will lead to
+# find the largest label value in the training set and use it to
+# scale the labels to the range [0, 1] (this will lead to
 # better training and convergence)
 max_value = train["function"].max()
 trainY = train["function"] / max_value
 testY = test["function"] / max_value
 
- #process the house attributes data by performing min-max scaling
+ #process the attributes data by performing min-max scaling
 # on continuous features, one-hot encoding on categorical features,
 # and then finally concatenating them together
 print("[INFO] processing data...")
@@ -71,8 +67,8 @@ history = model.fit(x=trainX, y=trainY,
 
 print("[INFO] predicting angle...")
 preds = model.predict(testX)
-# compute the difference between the *predicted* house prices and the
-# *actual* house prices, then compute the percentage difference and
+# compute the difference between the *predicted* value and the
+# *actual* value, then compute the percentage difference and
 # the absolute percentage difference
 diff = preds.flatten() - testY
 percentDiff = (diff / testY) * 100
@@ -90,6 +86,9 @@ print("[INFO] avg.prediction: {}, std_prediction: {}".format(
 	locale.currency(df["function"].std(), grouping=True)))
 print("[INFO] mean: {:.2f}%, std: {:.2f}%".format(mean, std))
 
+
+# open a file named 'predicted_--.txt' 
+# and write the predicted and actual values in it.
 with open('predicted_cos.txt', 'w') as file:
     for i in range(len(predicted)):
         file.write('{},{}\n'.format(actual[i],predicted[i]))
@@ -113,10 +112,10 @@ plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.savefig("f_cos")
 plt.show();
-
+# shows the error value relative to each epoch. 
 ##%
 
-#y1,bins1,z1 = plt.hist(training_loss,bins='auto',label = 'Training Loss')
+# plots the histogram of the error.
 y2,bins2,z2 = plt.hist(np.log(absPercentDiff),bins='auto',label = 'Testing Loss')
 plt.xlabel('loss', fontsize='15')
 plt.ylabel('f(loss)',fontsize='15')
